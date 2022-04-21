@@ -37,12 +37,13 @@ else:
         embed = DiscordEmbed(title='Whale Alert', description=whale['userAction'], color=color)
 
         # add fields to embed
+        embed.add_embed_field(name='Time', value=whale['timeStamp'], inline=False)
         embed.add_embed_field(name='Whale', value=whale['userAddress'], inline=False)
         embed.add_embed_field(name='Product', value=whale['product_name'],inline=False)
         embed.add_embed_field(name='Volt', value=str(whale['volt_number']))
         embed.add_embed_field(name='Asset', value=whale['deposited_asset'])
         embed.add_embed_field(name='Voltage', value=whale['voltage'])
-        embed.add_embed_field(name='Token Amount', value="{:,.0f}".format(whale['amount']))
+        embed.add_embed_field(name='Token Amount', value="{:,.0f} {}".format(whale['amount'], whale['deposited_asset']))
 
         # add embed object to webhook
         webhook.add_embed(embed)
