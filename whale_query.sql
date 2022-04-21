@@ -1,4 +1,5 @@
 select
+    d.txSignature,
     d.userAction,
     d.userAddress,
     timestamp(d.timestamp) as timestamp,
@@ -36,6 +37,7 @@ union all
 
 
 select
+    w.txSignature,
     w.userAction,
     w.userAddress,
     timestamp(w.timestamp) as timestamp,
