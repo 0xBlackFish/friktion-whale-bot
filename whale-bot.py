@@ -2,6 +2,10 @@ import pandas as pd
 from google.cloud import bigquery
 from discord_webhook import DiscordWebhook, DiscordEmbed
 from datetime import datetime
+import os
+
+# read webhook url from environment
+url = os.getenv('DISCORD_WEBHOOK')
 
 # establish google bigquery client
 client = bigquery.Client()
@@ -21,7 +25,7 @@ else:
     for index, whale in df.iterrows():
 
         # establish webhook
-        webhook = DiscordWebhook(url='https://discord.com/api/webhooks/966412469155270687/ho5jcQkpvfX2aafDH_OcrlTtYpGuRbKXaSgr4zrDYZpuD6eOswjdePZvgWH6v_gz2Bj5', rate_limit_retry=True)
+        webhook = DiscordWebhook(url=url, rate_limit_retry=True)
         
         # color embed based on the user action
         if whale['userAction'] == 'Withdraw':
