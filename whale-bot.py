@@ -1,8 +1,46 @@
 import pandas as pd
 from google.cloud import bigquery
-from discordwebhook import Discord
+from discord_webhook import DiscordWebhook, DiscordEmbed
+from datetime import datetime
 
-discord = Discord(url='https://discord.com/api/webhooks/966576493499146281/cSEb7JTmTOjJf9CTRVwuAJQ6z1lKP1eQHWUf0N3LkypfbghjDLuJ3UCTU-kOJW3iqlVa')
-#discord = Discord(url='https://discord.com/api/webhooks/966412469155270687/ho5jcQkpvfX2aafDH_OcrlTtYpGuRbKXaSgr4zrDYZpuD6eOswjdePZvgWH6v_gz2Bj5')
+# establish google bigquery client
+client = bigquery.Client()
 
-discord.post(content="Arghhh...Any whales around here? I'm testing the waters...")
+# open whale_query.sql file
+with open('whale_query.sql') as query:
+    query_string = query.read()
+
+# query deposit and withdrawal transactions within the last hour and store as a dataframe
+df = client.query(query=query_string).result().to_dataframe()
+
+if df.empty:
+    print(datetime.now(), 'No whale transactions found within the last hour, sailing away...')
+    pass
+
+else:
+    for index, whale in df.iterrows():
+
+        # establish webhook
+        webhook = DiscordWebhook(url='https://discord.com/api/webhooks/966412469155270687/ho5jcQkpvfX2aafDH_OcrlTtYpGuRbKXaSgr4zrDYZpuD6eOswjdePZvgWH6v_gz2Bj5', rate_limit_retry=True)
+        
+        # color embed based on the user action
+        if whale['userAction'] == 'Withdraw':
+            color = '34aadc'
+        elif whale['userAction'] == 'Deposit':
+            color = '5856d6'
+            
+        # create embed object for webhook
+        embed = DiscordEmbed(title='Whale Alert', description=whale['userAction'], color=color)
+
+        # add fields to embed
+        embed.add_embed_field(name='Whale', value=whale['userAddress'], inline=False)
+        embed.add_embed_field(name='Product', value=whale['product_name'],inline=False)
+        embed.add_embed_field(name='Volt', value=str(whale['volt_number']))
+        embed.add_embed_field(name='Asset', value=whale['deposited_asset'])
+        embed.add_embed_field(name='Voltage', value=whale['voltage'])
+        embed.add_embed_field(name='Token Amount', value="{:,.0f}".format(whale['amount']))
+
+        # add embed object to webhook
+        webhook.add_embed(embed)
+
+        response = webhook.execute()
