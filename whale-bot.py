@@ -37,8 +37,8 @@ else:
         embed = DiscordEmbed(title='Whale Alert', description=whale['userAction'], color=color)
 
         # add fields to embed
-        embed.add_embed_field(name='Transaction ID', value=whale['txSignature'], inline=False)
-        embed.add_embed_field(name='Time', value=datetime.strptime(whale['timestamp'],"%Y-%m-%dT%H:%M:%SZ").strftime('%Y-%m-%d %H:%M:%S'), inline=False)
+        embed.add_embed_field(name='Transaction ID', value="solscan.io/tx/{}".format(whale['txSignature']), inline=False)
+        embed.add_embed_field(name='Time', value="{} UTC".format(datetime.strptime(whale['timestamp'],"%Y-%m-%dT%H:%M:%SZ").strftime('%Y-%m-%d %H:%M:%S')), inline=False)
         embed.add_embed_field(name='Whale', value=whale['userAddress'], inline=False)
         embed.add_embed_field(name='Product', value=whale['product_name'],inline=False)
         embed.add_embed_field(name='Volt', value=str(whale['volt_number']))
