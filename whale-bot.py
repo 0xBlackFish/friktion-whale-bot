@@ -34,7 +34,7 @@ else:
             color = '5856d6'
             
         # create embed object for webhook
-        embed = DiscordEmbed(title='Whale Alert', description=whale['userAction'], color=color)
+        embed = DiscordEmbed(title='Whale Alert - {}'.format(whale['userAction']), color=color)
         
         # create embed description
         embed.set_description("**Transaction ID:** [solscan.io/tx/{0}](https://solscan.io/tx/{0})".format(whale['txSignature']))
