@@ -28,9 +28,9 @@ else:
         webhook = DiscordWebhook(url=url, rate_limit_retry=True)
         
         # color embed based on the user action
-        if whale['userAction'] == 'Withdraw':
+        if whale['userAction'] == 'Withdraw' or whale['userAction'] == 'CancelPendingDeposit':
             color = '34aadc'
-        elif whale['userAction'] == 'Deposit':
+        elif whale['userAction'] == 'Deposit' or whale['userAction'] == 'CancelPendingWithdrawal':
             color = '5856d6'
             
         # create embed object for webhook
